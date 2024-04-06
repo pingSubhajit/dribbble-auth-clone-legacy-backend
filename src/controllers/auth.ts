@@ -3,7 +3,7 @@ import prisma from '../db/prisma.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import {expressjwt} from 'express-jwt'
-import {sendVerificationEmail} from '../utilities.js'
+import {generateVerificationToken, sendVerificationEmail} from '../utilities.js'
 
 export const checkUserName = async (req: any, res: any) => {
 	const body = req.body as { username: string } | null
@@ -84,12 +84,15 @@ export const register = async (req: any, res: any) => {
 			}
 		})
 
+		const verificationToken = await generateVerificationToken(user.id)
+		const mail = await sendVerificationEmail(user.email, verificationToken.token)
+
 		return res.send({ success: true, message: `User::${user.username} registered successfully`, data: {
-				name: user.name,
-				username: user.username,
-				email: user.email,
-				account
-			}})
+			name: user.name,
+			username: user.username,
+			email: user.email,
+			account
+		}})
 	} catch (error) {
 		console.error(error)
 		return res.status(errors.generic.SOMETHING_WENT_WRONG.status).json(errors.generic.SOMETHING_WENT_WRONG)
@@ -133,8 +136,6 @@ export const login = async (req: any, res: any) => {
 		if (!match) {
 			return res.status(errors.auth.INVALID_CREDENTIALS.status).json(errors.auth.INVALID_CREDENTIALS)
 		}
-
-		// await sendVerificationEmail(user.email, '123456')
 
 		const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string)
 		res.cookie('token', token, { httpOnly: true })

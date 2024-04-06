@@ -30,6 +30,20 @@ const errors = {
 			status: 500,
 			message: 'Something went wrong, please try later'
 		}
+	},
+	user: {
+		NO_VERIFICATION_TOKEN: {
+			status: 400,
+			message: 'No verification token provided'
+		},
+		INVALID_VERIFICATION_TOKEN: {
+			status: 400,
+			message: 'Invalid verification token'
+		},
+		ACCOUNT_ALREADY_VERIFIED: {
+			status: 400,
+			message: 'Account is already verified'
+		},
 	}
 }
 

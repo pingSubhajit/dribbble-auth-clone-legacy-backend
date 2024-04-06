@@ -8,12 +8,13 @@ datasource db {
 }
 
 model User {
-  id       String   @id @default(cuid())
-  name     String?
-  username String   @unique
-  email    String   @unique
-  password String
-  account  Account?
+  id                String             @id @default(cuid())
+  name              String?
+  username          String             @unique
+  email             String             @unique
+  password          String
+  account           Account?
+  verificationToken VerificationToken?
 }
 
 model Account {
@@ -31,4 +32,13 @@ enum Purpose {
   SHARE
   HIRE
   INSPIRATION
+}
+
+model VerificationToken {
+  id        String   @id @default(cuid())
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
