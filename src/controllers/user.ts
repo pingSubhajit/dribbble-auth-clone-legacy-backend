@@ -70,6 +70,17 @@ export const onboardUser = async (req: any, res: any) => {
 					isOnboarded: true
 				}
 			})
+
+			const user = await prisma.user.findUnique({
+				where: {
+					id: req.user.id
+				},
+				include: {
+					verificationToken: true
+				}
+			})
+
+			const mail = await sendVerificationEmail(user!.email, user!.verificationToken!.token)
 		}
 
 		return res.json({

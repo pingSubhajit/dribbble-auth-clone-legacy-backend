@@ -85,7 +85,6 @@ export const register = async (req: any, res: any) => {
 		})
 
 		const verificationToken = await generateVerificationToken(user.id)
-		const mail = await sendVerificationEmail(user.email, verificationToken.token)
 
 		return res.send({ success: true, message: `User::${user.username} registered successfully`, data: {
 			name: user.name,
