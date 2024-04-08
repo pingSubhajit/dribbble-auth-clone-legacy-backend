@@ -2,7 +2,7 @@
 
 ### Dribbble Auth Clone: Full Stack Dev Internship
 
-```NEXT.JS VERSION```
+```BACKEND```
 
 <hr>
 
