@@ -169,9 +169,23 @@ export const changeEmail = async (req: any, res: any) => {
 				id: req.user.id
 			},
 			data: {
-				email
+				email,
+				account: {
+					update: {
+						isVerified: false
+					}
+				}
+			},
+			include: {
+				verificationToken: true
 			}
 		})
+
+		if (!user.verificationToken) {
+			user.verificationToken = await generateVerificationToken(user.id)
+		}
+
+		const mail = await sendVerificationEmail(email, user!.verificationToken!.token)
 
 		return res.send({ success: true, message: 'Email updated successfully', data: { email: user.email } })
 	} catch (error) {
